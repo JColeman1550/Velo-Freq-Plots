@@ -1,0 +1,51 @@
+library(dplyr)
+library(ggplot2)
+library(patchwork)
+library(scales)
+
+# Filter out "Pitch Out" pitches from csv
+csvName_filtered <- CsvName %>%
+  filter(pitch_name != "Pitch Out")
+
+#2024
+plot_2024 <- csvName_filtered %>%
+  filter(player_name == "Last, First") %>%
+  ggplot(aes(x = release_speed, fill = pitch_name, color = pitch_name)) +
+  geom_density(alpha = 0.75) +  # Changed stat_density to geom_density
+  scale_fill_manual(values = c(
+    "Changeup" = "green", 
+    "4-Seam Fastball" = "red",
+    "Slider" = "yellow", 
+    "Curveball" = "blue",
+    "Cutter" = "brown", 
+    "Sinker" = "orange",
+    "Split-Finger" = "darkslategray1", 
+    "Sweeper" = "gold",
+    "Eephus" = 'gray', 
+    "Knuckle-Curve" = "navy",
+    "Slow Curve" = "turquoise"
+  )) +
+  scale_color_manual(values = c(
+    "Changeup" = "green", 
+    "4-Seam Fastball" = "red",
+    "Slider" = "yellow", 
+    "Curveball" = "blue",
+    "Cutter" = "brown", 
+    "Sinker" = "orange",
+    "Split-Finger" = "darkslategray1", 
+    "Sweeper" = "gold",
+    "Eephus" = 'gray', 
+    "Knuckle-Curve" = "navy",
+    "Slow Curve" = "turquoise"
+  )) +
+  ggtitle("2024 - Velocity by Pitch Frequency") +
+  xlab("Velocity in MPH") + ylab("Frequency") +
+  theme(legend.position = "none",
+        panel.spacing = unit(.75, "lines"),
+        plot.title = element_text(color = 'black', size = 16, face = "bold", hjust = 0.5),
+        axis.title.x = element_text(color = 'black', size = 14, face = "bold", hjust = 0.5),
+        axis.title.y = element_text(color = 'black', size = 14, face = "bold", hjust = 0.5),
+        axis.text = element_text(size = 12),
+        strip.text = element_text(size = 9, face = "bold")) +
+  facet_grid(pitch_name ~ .) +
+  scale_y_continuous(labels = percent_format())
